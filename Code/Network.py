@@ -28,21 +28,12 @@ class ParseDatabase:
 		soup = BeautifulSoup(mystr, features='html.parser')
 		# soup = BeautifulSoup(mystr, features='html5lib')
 
-		# selector = 'h3 ~ div > #Save_game_data_location'
-		# template - infotable - head
-		# table - gamedata - head - row
-		# first_selector = 'span#Save_game_data_location  table#table-gamedata'
-		# second_selector = 'span#Save_game_data_location'
-
-		# found = soup.select(first_selector)
-		# print(found)
-
-		table_html = soup.find('span', {'id': 'Save_game_data_location'}).find_next('table', {'id': 'table-gamedata'})
-		print(table_html)
+		# table_html = soup.find('span', {'id': 'Save_game_data_location'}).find_next('table', {'id': 'table-gamedata'})
+		# print(table_html)
 		# selector = 'span#Save_game_data_location  table#table-gamedata'
 		selector = 'h3 ~ div.container-pcgwikitable table#table-gamedata.pcgwikitable.template-infotable'
 		table_html = soupsieve.select_one(selector, soup)
-		print(table_html)
+		# print(table_html)
 		# found2 = found.find_next('table', {'id': 'table-gamedata'})
 
 		# print(table_html.text)
