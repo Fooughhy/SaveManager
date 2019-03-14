@@ -1,0 +1,4 @@
+requests==2.20.0
+soupsieve==1.8
+PyQt5==5.12
+beautifulsoup4==4.7.1
