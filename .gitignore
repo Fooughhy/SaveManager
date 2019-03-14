@@ -252,4 +252,7 @@ dmypy.json
 ### Python Patch ###
 .venv/
 
+### Custom ###
+database/
+
 # End of https://www.gitignore.io/api/python,pycharm,intellij
