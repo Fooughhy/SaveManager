@@ -3,9 +3,11 @@ import requests
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
 import soupsieve
+import collections
 from collections import OrderedDict
 from pprint import pprint
-
+from tinydb.database import Document
+import json
 
 class ParseDatabase:
 
@@ -17,51 +19,40 @@ class ParseDatabase:
 			'save_location': '<Steam-folder>\\userdata\\<user-id>\\378540\\remote\\'
 		}
 
-		self.request_webpage()
+		# self.request_webpage()
 
-	def request_webpage(self):
-		with urlopen("https://pcgamingwiki.com/wiki/The_Surge") as url:
-			mybytes = url.read()
-			mystr = mybytes.decode("utf8")
-			url.close()
 
-		soup = BeautifulSoup(mystr, features='html.parser')
-		# soup = BeautifulSoup(mystr, features='html5lib')
+# @staticmethod
+def request_webpage():
+	with urlopen("https://pcgamingwiki.com/wiki/Life_Is_Strange") as url:
+		mybytes = url.read()
+		mystr = mybytes.decode("utf8")
+		url.close()
+	return mystr
 
-		# table_html = soup.find('span', {'id': 'Save_game_data_location'}).find_next('table', {'id': 'table-gamedata'})
-		# print(table_html)
-		# selector = 'span#Save_game_data_location  table#table-gamedata'
-		selector = 'h3 ~ div.container-pcgwikitable table#table-gamedata.pcgwikitable.template-infotable'
-		table_html = soupsieve.select_one(selector, soup)
-		# print(table_html)
-		# found2 = found.find_next('table', {'id': 'table-gamedata'})
 
-		# print(table_html.text)
-		# print(table_html)
-		d = self.getDictFromHTMLTable(table_html)
-		dd = [soupsieve.closest('span#Save_game_data_location', soup), d]
-
-		#Save_game_data_location
-
-		pprint(d)
-		pprint(dd)
-
-		# print(found2)
-		# print(found2)
-		# print(type(found2))
-
-	def getDictFromHTMLTable(self, table_html):
-		values_dict = OrderedDict()
-		try:
-			for tr in table_html.select('tr'):
+# @staticmethod
+def getDictFromHTMLTable(soup):
+	if isinstance(soup, collections.Mapping) or isinstance(soup, list):
+		table_dict = []
+		for table in soup:
+			values_dict = []
+			for tr in table.select('tr'):
+				temp_dict = {}
 				for th, td in zip(tr.select('th'), tr.select('td')[::2]):
-					values_dict[th.text.strip()] = td.text.strip().splitlines()
-		except TypeError:
-			print("Provided table is of type: " + type(table_html))
+					temp_dict = {'System': th.text.strip(), 'Path': td.text.strip()}
+				if not len(temp_dict):
+					values_dict.append(temp_dict)
+			if not len(values_dict):
+				table_dict.append(values_dict)
+		return table_dict
+	else:
+		values_dict = []
+		for tr in soup.select('tr'):
+			temp_dict = {}
+			for th, td in zip(tr.select('th'), tr.select('td')[::2]):
+				temp_dict = {'System': th.text.strip(), 'Path': td.text.strip()}
+			if len(temp_dict) > 0:
+				values_dict.append(temp_dict)
 
-		# table_dict = [values_dict]
-		# for tr in table_html.select('tr'):
-		# 	for th, td in zip(tr.select('th'), tr.select('td')[::2]):
-		# 		values_dict[th.text.strip()] = td.text.strip().splitlines()
-
-		return values_dict
+	return values_dict

@@ -2,31 +2,33 @@ import sys
 from Code import GUI, Network, Database, constants
 from PyQt5.QtWidgets import QApplication
 from pathlib import Path
+from bs4 import BeautifulSoup
+import soupsieve
+import collections
+from tinydb import TinyDB, Query
+from tinydb.database import Table
+from tinydb.queries import Query
 
 
 def StartApp():
 	my_app = QApplication(sys.argv)
 	main_widget = GUI.QtWindow()
 
-	test_db = """
-{
-	"researcher": {
-		"name": "Ford Prefect",
-		"species": "Betelgeusian",
-		"relatives": [
-			{
-				"name": "Zaphod Beeblebrox",
-				"species": "Betelgeusian"
-			}
-		]
-	}
-}
-"""
-
 	database = Database.GameDatabase()
-	networkdb = Network.ParseDatabase()
+	network_html = Network.request_webpage()
 
-	database.saveDatabaseAsJSON(test_db)
+	soup = BeautifulSoup(network_html, features='html.parser')
+
+	# Alternate parser for HTML
+	# soup = BeautifulSoup(mystr, features='html5lib')
+
+	selector = 'h3 ~ div.container-pcgwikitable table#table-gamedata.pcgwikitable.template-infotable'
+	table_html = soupsieve.select(selector, soup)
+	if isinstance(table_html, collections.Mapping) or isinstance(table_html, list):
+		for t in table_html:
+			d = Network.getDictFromHTMLTable(t)
+			for doc in d:
+				database.db.insert(doc)
 
 	sys.exit(my_app.exec_())
 
