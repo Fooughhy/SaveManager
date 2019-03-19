@@ -11,7 +11,7 @@ class GameDatabase:
 	def __init__(self, storage_type=constants.DB_STORAGE_TYPE
 				, abs_path=Path(constants.DB_REL_DIR, constants.DB_FILE_NAME).absolute()):
 
-		self.db = TinyDB(abs_path, storage=storage_type)
+		self.db = TinyDB(abs_path, sort_keys=True, indent=4, storage=storage_type, create_dirs=True)
 		self.db_path = Path(abs_path)
 		#
 		# try:
@@ -35,4 +35,8 @@ class GameDatabase:
 	# 			raise
 
 	def getGamePath(self, game_name):
-		return self.db.search(Query()['game'] == 'Life is Strange')
+		return self.db.search(Query()['Game'] == game_name and Query()['System'] == 'Windows')
+
+	def rebuildDatabase(self, table_name):
+		for game in self.db.search(Query()['Game']):
+			print()

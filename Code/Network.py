@@ -40,7 +40,7 @@ def getDictFromHTMLTable(soup):
 			for tr in table.select('tr'):
 				temp_dict = {}
 				for th, td in zip(tr.select('th'), tr.select('td')[::2]):
-					temp_dict = {'System': th.text.strip(), 'Path': td.text.strip()}
+					temp_dict = {'Game': 'Life is Strange', 'System': th.text.strip(), 'Path': td.text.strip()}
 				if not len(temp_dict):
 					values_dict.append(temp_dict)
 			if not len(values_dict):
@@ -51,7 +51,7 @@ def getDictFromHTMLTable(soup):
 		for tr in soup.select('tr'):
 			temp_dict = {}
 			for th, td in zip(tr.select('th'), tr.select('td')[::2]):
-				temp_dict = {'System': th.text.strip(), 'Path': td.text.strip()}
+				temp_dict = {'Game': 'Life is Strange', 'System': th.text.strip(), 'Path': td.text.strip()}
 			if len(temp_dict) > 0:
 				values_dict.append(temp_dict)
 

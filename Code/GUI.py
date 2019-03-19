@@ -1,18 +1,16 @@
 # GUI Frameworks: PyQt, Pyforms, Kivy
 
 from PyQt5 import QtCore
-from PyQt5.QtWidgets import QApplication, QLabel, QWidget, QPushButton, QVBoxLayout, QHBoxLayout
+from PyQt5.QtCore import pyqtSlot
+from PyQt5.QtWidgets import QApplication, QLabel, QWidget, QPushButton, QVBoxLayout, QHBoxLayout, QMainWindow
 
 
 class QtWindow(QWidget):
 
-	def __init__(self):
-		super().__init__()
+	def __init__(self, db):
+		super(QWidget, self).__init__()
 
-		self.game_database = {
-				'name': 'Dark Souls',
-				'save_location': '<Steam-folder>\\userdata\\<user-id>\\378540\\remote\\'
-		}
+		self.game_database = db
 
 		self.init_ui()
 
@@ -26,11 +24,15 @@ class QtWindow(QWidget):
 		h_box = QHBoxLayout()
 		v_box = QVBoxLayout()
 
-		test_label = QLabel(self)
-		test_label.setText('Test text')
+		backup_button = QPushButton('Backup saves')
+		backup_button.move(200, 200)
+		backup_button.clicked.connect(self.backupGames)
+
+		test_label = QLabel('Test text')
 		test_label.move(100, 100)
 		h_box.addStretch()
 		h_box.addWidget(test_label)
+		h_box.addWidget(backup_button)
 		h_box.addStretch()
 
 		v_box.addStretch()
@@ -39,4 +41,7 @@ class QtWindow(QWidget):
 
 		self.setLayout(v_box)
 
-		self.show()
+	@pyqtSlot()
+	def backupGames(self):
+		item = self.game_database.getGamePath('Life is Strange')
+		print(item)
