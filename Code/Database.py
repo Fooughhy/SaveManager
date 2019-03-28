@@ -37,6 +37,12 @@ class GameDatabase:
 	def getGamePath(self, game_name):
 		return self.db.search(Query()['Game'] == game_name and Query()['System'] == 'Windows')
 
+	def getLibraryPath(self, lib_name):
+		return self.db.search(Query()['Library'] == lib_name)
+
+	def addLibraryPath(self, lib_name, lib_abbrev, lib_path):
+		self.db.table("Libraries").insert({"LibService": lib_name, "Abbrev": lib_abbrev, "Path": lib_path})
+
 	def rebuildDatabase(self, table_name):
 		for game in self.db.search(Query()['Game']):
 			print()

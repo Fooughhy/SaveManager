@@ -13,8 +13,13 @@ from tinydb.queries import Query
 def StartApp():
 	my_app = QApplication(sys.argv)
 	database = Database.GameDatabase()
-	network_html = Network.request_webpage()
+	network_html = Network.request_webpage("https://pcgamingwiki.com/wiki/Life_Is_Strange")
 	main_widget = GUI.QtWindow(database)
+
+	p = Path("F:\\", "Spel", "SteamLibrary", "steamapps", "common")
+	database.addLibraryPath("Steam", "Steam", Path("F", "Spel", "SteamLibrary", "steamapps", "common"))
+	p = Path("C:\\Users\\fough\\Documents\\my games\\Life Is Strange\\Saves")
+	# database.addLibraryPath("UserProfile", "\%USERPROFILE\%", p)
 
 	main_widget.show()
 
