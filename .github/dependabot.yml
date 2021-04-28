@@ -1,0 +1,19 @@
+version: 2
+updates:
+- package-ecosystem: pip
+  directory: "/"
+  schedule:
+    interval: daily
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: pyqt5
+    versions:
+    - 5.15.2
+    - 5.15.3
+  - dependency-name: soupsieve
+    versions:
+    - "2.1"
+    - "2.2"
+  - dependency-name: tinydb
+    versions:
+    - 4.3.0
